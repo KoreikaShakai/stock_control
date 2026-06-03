@@ -1,0 +1,98 @@
+import { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import Webcam from "react-webcam";
+import { Button, Typography, Box, Modal, IconButton } from "@mui/material";
+import dayjs from "dayjs";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  justifyItems: "center",
+};
+
+export function CameraModal({ open, setOpen }) {
+  const handleClose = () => setOpen((is) => false);
+  const webCamRef = useRef(null);
+  //   const navigate = useNavigate();
+
+  const videoConstraints = {
+    // width: 380,
+    // height: 640,
+    facingMode: "user",
+  };
+
+  const onClickScreenShot = useCallback(() => {
+    const image = webCamRef.current?.getScreenshot();
+    const blob = atob(image.replace(/^.*,/, ""));
+    let buffer = new Uint8Array(blob.length);
+    for (let i = 0; i < blob.length; i++) {
+      buffer[i] = blob.charCodeAt(i);
+    }
+    const date = dayjs();
+    const timeStamp = date.format("YYYY-MM-DD HH:mm:ss");
+    const file = new File(
+      [buffer.buffer],
+      `${timeStamp}_image.jpeg`.replace(/\s/, "_"),
+      {
+        type: "image/jpeg",
+      },
+    );
+    console.log(file);
+    setOpen((is) => false);
+  }, [webCamRef]);
+
+  const goToErrorPage = () => {
+    // navigate("/error");
+  };
+
+  return (
+    <div>
+      {/* <Button onClick={handleOpen}>Open modal</Button> */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <div>
+            <h2>撮影画面</h2>
+          </div>
+          <div>
+            <Webcam
+              audio={false}
+              disablePictureInPicture={true}
+              screenshotFormat={"image/jpeg"}
+              onUserMediaError={goToErrorPage}
+              videoConstraints={videoConstraints}
+              width={"100%"}
+              ref={webCamRef}
+            />
+          </div>
+          <div>
+            <IconButton
+              size="large"
+              color="primary"
+              aria-label="capture"
+              sx={{ backgroundColor: "lightgrey" }}
+            >
+              <AddAPhotoIcon
+                fontSize="large"
+                content={"撮影"}
+                onClick={onClickScreenShot}
+              />
+            </IconButton>
+          </div>
+        </Box>
+      </Modal>
+    </div>
+  );
+}
