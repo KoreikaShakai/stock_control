@@ -1,0 +1,38 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "cd front && npm install && npm run build && rm -rf ../public && cp -r dist ../public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "knex": "^3.2.10",
+    "pg": "^8.21.0",
+    "@aws-sdk/client-cognito-identity": "^3.651.1",
+    "@aws-sdk/client-s3": "^3.651.1",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.651.1",
+    "@aws-sdk/s3-request-presigner": "^3.651.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.6",
+    "mocha": "^10.8.2",
+    "prettier": "^3.3.3",
+    "pretty-quick": "^4.0.0"
+  }
+}
