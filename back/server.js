@@ -14,14 +14,12 @@ const multer = require("multer");
 const upload = multer();
 
 app.use(express.static(path.join(__dirname, "/public")));
-
 app.use(express.json());
-
 app.get("/toranpu", (req, res) => {
   responseTrump(req, res);
 });
 
-app.get("/stock_data", async (req, res) => {
+app.get("/stock_dates", async (req, res) => {
   const id = req.query["user_id"];
   try {
     const result = await knex(STOCK_DATA).where("id", id);
@@ -56,8 +54,8 @@ app.post("/photos", upload.any(), async (req, res) => {
   }
 });
 
-app.get("/get_photo", async (req, res) => {
-  const id = "abc";
+app.get("/get_photos", async (req, res) => {
+  const id = req.query["user_id"];
   try {
     const data = await knex(STOCK_DATA)
       .select("photo_name", "create_date")
