@@ -24,8 +24,6 @@ export function CameraModal({ open, setOpen }) {
   //   const navigate = useNavigate();
 
   const videoConstraints = {
-    // width: 380,
-    // height: 640,
     facingMode: "user",
   };
 
@@ -65,7 +63,6 @@ export function CameraModal({ open, setOpen }) {
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}>Open modal</Button> */}
       <Modal
         open={open}
         onClose={handleClose}
