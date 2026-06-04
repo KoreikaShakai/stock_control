@@ -1,31 +1,53 @@
 const { translate } = require("@vitalets/google-translate-api");
 const { getTrump } = require("../getTruth");
-
+const fs = require("fs");
+const path = require("path");
+const { resolve } = require("dns");
 const createResponseBody = () => {
   const responseTrump = async (res, req) => {
     console.log("アクセス");
     let result = [];
     try {
       const data = await getTrump();
-      const translatedData = await Promise.all(
-        data.map(async (post) => {
-          if (post.content && post.content.trim() !== "") {
-            try {
-              const resTranslate = await translate(post.content, {
-                from: "en",
-                to: "ja",
-              });
-              post.content_ja = resTranslate.text;
-            } catch (transError) {
-              console.error("翻訳エラー:", transError.message);
-              post.content_ja = "(翻訳失敗)";
-            }
-          } else {
-            post.content_ja = "(本文なし)";
+      const translatedData = [];
+      for (const post of data) {
+        if (post.content && post.content.trim() !== "") {
+          try {
+            const resTranslate = await translate(post.content, {
+              from: "en",
+              to: "ja",
+            });
+            post.content_ja = resTranslate.text;
+            await new Promise((resolve) => setTimeout(resolve, 500));
+          } catch (transError) {
+            console.error("翻訳エラー:", transError.message);
+            post.content_ja = "(翻訳失敗)";
           }
-          return post;
-        }),
-      );
+        } else {
+          post.content_ja = "(本文なし)";
+        }
+        return post;
+      }
+
+      //   const translatedData = await Promise.all(
+      //     data.map(async (post) => {
+      //       if (post.content && post.content.trim() !== "") {
+      //         try {
+      //           const resTranslate = await translate(post.content, {
+      //             from: "en",
+      //             to: "ja",
+      //           });
+      //           post.content_ja = resTranslate.text;
+      //         } catch (transError) {
+      //           console.error("翻訳エラー:", transError.message);
+      //           post.content_ja = "(翻訳失敗)";
+      //         }
+      //       } else {
+      //         post.content_ja = "(本文なし)";
+      //       }
+      //       return post;
+      //     }),
+      //   );
       await translatedData.forEach((post) => {
         result.push({
           post_date: post.account.last_status_at,
@@ -34,6 +56,10 @@ const createResponseBody = () => {
         });
       });
       console.log(result);
+      const filePath = await path.join(__dirname, "trump_posts.json");
+      const jsonFile = await JSON.stringify(result, null, 2);
+      await fs.writeFileSync(filePath, jsonFile, "utf-8");
+      console.log("ファイルを保存しました。", `${filePath}`);
       res.status(200).json({ successe: true, data: result });
       return;
     } catch (error) {
