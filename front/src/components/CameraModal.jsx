@@ -29,7 +29,7 @@ export function CameraModal({ open, setOpen }) {
     facingMode: "user",
   };
 
-  const onClickScreenShot = useCallback(() => {
+  const onClickScreenShot = useCallback(async () => {
     const image = webCamRef.current?.getScreenshot();
     const blob = atob(image.replace(/^.*,/, ""));
     let buffer = new Uint8Array(blob.length);
@@ -38,14 +38,24 @@ export function CameraModal({ open, setOpen }) {
     }
     const date = dayjs();
     const timeStamp = date.format("YYYY-MM-DD HH:mm:ss");
+    const user_id = localStorage.getItem("user_id");
+
     const file = new File(
       [buffer.buffer],
-      `${timeStamp}_image.jpeg`.replace(/\s/, "_"),
+      `${user_id}_${timeStamp}_image.jpeg`.replace(/\s/, "_"),
       {
         type: "image/jpeg",
       },
     );
-    console.log(file);
+
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    formData.append("user_id", localStorage.getItem("user_id"));
+    await fetch(`/photos`, {
+      method: "POST",
+      body: formData,
+    });
     setOpen((is) => false);
   }, [webCamRef]);
 

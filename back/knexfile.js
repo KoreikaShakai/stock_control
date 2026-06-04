@@ -9,7 +9,7 @@ module.exports = {
     connection: {
       user: "user",
       database: "stock_control",
-      hose: "localhost",
+      host: "localhost",
     },
     migrations: {
       directory: "./knex_migrations",
@@ -20,18 +20,13 @@ module.exports = {
   },
 
   production: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
+    client: "pg",
+    connection: process.env.DATABASE_URL,
     migrations: {
-      tableName: "knex_migrations",
+      directory: "./knex_migrations",
+    },
+    seeds: {
+      directory: "./knex_seeds",
     },
   },
 };
