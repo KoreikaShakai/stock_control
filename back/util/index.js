@@ -32,7 +32,7 @@ async function getPhotos() {
     return null;
   }
 
-  const sortedByNewestContents = response.Contents.toSorted((a, b) => {
+  const sortedByNewestContents = [...response.Contents].sort((a, b) => {
     return Date.parse(b.LastModified) - Date.parse(a.LastModified);
   });
 
@@ -67,4 +67,8 @@ async function uploadPhoto(file, fileName) {
   return response;
 }
 
-module.exports = { getPhotos, uploadPhoto };
+module.exports = {
+  getPhotos,
+  uploadPhoto,
+  s3GetSignedUrl,
+};

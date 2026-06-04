@@ -10,8 +10,8 @@ export function News() {
   };
 
   return (
-    <>
-      <Button onClick={handleNewsCatch}>キャッチ</Button>
-    </>
+    <div style={{ justifyItems: "center" }}>
+      <Button sx={{ fontSize: 48 }}>TORANPU</Button>
+    </div>
   );
 }
