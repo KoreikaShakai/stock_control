@@ -66,6 +66,7 @@ export function StockList({ isUpload, setIsUpload }) {
               maxWidth: 345,
               textAlign: "center",
               backgroundColor: "whitesmoke",
+              marginBottom: 4,
             }}
             key={ele.create_date}
             id={ele.id}
