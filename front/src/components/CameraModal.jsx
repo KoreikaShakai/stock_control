@@ -18,7 +18,7 @@ const style = {
   justifyItems: "center",
 };
 
-export function CameraModal({ open, setOpen }) {
+export function CameraModal({ open, setOpen, setIsUpload }) {
   const handleClose = () => setOpen((is) => false);
   const webCamRef = useRef(null);
   //   const navigate = useNavigate();
@@ -54,6 +54,7 @@ export function CameraModal({ open, setOpen }) {
       method: "POST",
       body: formData,
     });
+    setIsUpload((is) => !is);
     setOpen((is) => false);
   }, [webCamRef]);
 

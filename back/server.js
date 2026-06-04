@@ -55,14 +55,16 @@ app.get("/photos", async (req, res) => {
   const id = req.query["user_id"];
   try {
     const data = await knex(STOCK_DATA)
-      .select("photo_name", "create_date")
+      .select("photo_name", "create_date", "id")
       .where("user_id", id);
     const result = await Promise.all(
       data.map(async (photo) => {
+        console.log("photo", photo);
         const url = await s3GetSignedUrl(photo.photo_name);
         const res_object = {
           url: url,
           create_date: photo.create_date,
+          id: photo.id,
         };
         return res_object;
       }),
@@ -71,6 +73,35 @@ app.get("/photos", async (req, res) => {
     return;
   } catch (error) {
     res.status(500).json({ successe: false, data: "写真取得失敗" });
+    return;
+  }
+});
+
+app.post("/update_photos", async (req, res) => {
+  const id = req.body.id;
+  try {
+    const result = await knex(STOCK_DATA)
+      .where("id", id)
+      .update({ create_date: knex.fn.now() }, ["*"]);
+    res.status(200).json({ success: true, data: result });
+    console.log(result);
+    return;
+  } catch (error) {
+    console.log("時刻登録失敗", error);
+    res.status(500).json({ successe: false, data: "時刻登録失敗" });
+    return;
+  }
+});
+
+app.delete("/delete", async (req, res) => {
+  const id = req.body.id;
+  try {
+    const result = await knex(STOCK_DATA).where("id", id).del(["*"]);
+    res.status(200).json({ success: true, data: result });
+    return;
+  } catch (error) {
+    console.log("削除失敗", error);
+    res.status(500).json({ successe: false, data: "削除失敗" });
     return;
   }
 });

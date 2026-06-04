@@ -5,8 +5,7 @@ import { CameraModal } from "./CameraModal";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
-export function Header() {
-  const [open, setOpen] = useState(false);
+export function Header({ open, setOpen }) {
   const handleOpen = () => setOpen((is) => true);
 
   //   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export function Header() {
   return (
     <Box sx={{ textAlign: "center" }}>
       <AppBar position="static" sx={{ backgroundColor: "tomato" }}>
-        <CameraModal open={open} setOpen={setOpen} />
+        <CameraModal />
         <Toolbar>
           <IconButton
             size="medium"

@@ -12,13 +12,14 @@ window.localStorage.setItem("user_id", "abcde");
 
 function App() {
   const [isUpload, setIsUpload] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Header />
-      <CameraModal setIsUpload={setIsUpload} />
+      <Header open={open} setOpen={setOpen} />
+      <CameraModal setIsUpload={setIsUpload} open={open} setOpen={setOpen} />
       <News></News>
-      <StockList isUpload={isUpload} />
+      <StockList isUpload={isUpload} setIsUpload={setIsUpload} />
     </>
   );
 }

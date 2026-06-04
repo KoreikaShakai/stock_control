@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardActions,
@@ -12,12 +12,35 @@ import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 
-export function StockList({ isUpload }) {
+export function StockList({ isUpload, setIsUpload }) {
   const [photos, setPhotos] = useState([]);
+  const refCard = useRef("");
 
-  const handleUpdate = () => {};
+  const handleUpdate = async (event) => {
+    const req = {
+      id: event.target.parentNode.parentNode.parentNode.id,
+    };
+    if (req.id === "") return;
+    await fetch("/update_photos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    setIsUpload((is) => !is);
+  };
 
-  const handleRemove = () => {};
+  const handleRemove = async (event) => {
+    const req = {
+      id: event.target.parentNode.parentNode.parentNode.parentNode.id,
+    };
+    if (req.id === "") return;
+    await fetch("/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    setIsUpload((is) => !is);
+  };
 
   useEffect(() => {
     fetch(`/photos?user_id=${localStorage.getItem("user_id")}`)
@@ -45,6 +68,7 @@ export function StockList({ isUpload }) {
               backgroundColor: "whitesmoke",
             }}
             key={ele.create_date}
+            id={ele.id}
           >
             <CardMedia sx={{ height: 320 }} image={ele.url} />
             <CardContent>
@@ -56,11 +80,19 @@ export function StockList({ isUpload }) {
               </Typography>
             </CardContent>
             <CardActions sx={{ justifyContent: "space-between" }}>
-              <IconButton size="medium">
-                <UpdateIcon fontSize="large" sx={{ color: "blue" }} />
+              <IconButton size="small">
+                <UpdateIcon
+                  fontSize="large"
+                  sx={{ color: "blue" }}
+                  onClick={handleUpdate}
+                />
               </IconButton>
-              <IconButton size="medium">
-                <DeleteIcon fontSize="large" sx={{ color: "red" }} />
+              <IconButton size="small">
+                <DeleteIcon
+                  fontSize="large"
+                  sx={{ color: "red" }}
+                  onClick={handleRemove}
+                />
               </IconButton>
             </CardActions>
           </Card>
