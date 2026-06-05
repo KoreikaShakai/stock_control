@@ -42,6 +42,7 @@ const createResponseBody = () => {
       await fs.writeFileSync(filePath, jsonFile, "utf-8");
       console.log("ファイルを保存しました。", `${filePath}`);
       res.status(200).json({ successe: true, data: result });
+      console.log(data);
       return;
     } catch (error) {
       console.error("取得失敗", error);
