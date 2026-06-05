@@ -6,7 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
+      "/photos": {
+        target: "http://localhost:3000",
+      },
+      "/update_photos": {
+        target: "http://localhost:3000",
+      },
+      "/delete": {
+        target: "http://localhost:3000",
+      },
+      "/toranpu": {
         target: "http://localhost:3000",
       },
     },

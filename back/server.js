@@ -24,10 +24,8 @@ app.get("/stock_dates", async (req, res) => {
   try {
     const result = await knex(STOCK_DATA).where("id", id);
     res.status(200).json(result);
-    console.log(result);
     return;
   } catch (error) {
-    console.error(error);
     return;
   }
 });
@@ -45,7 +43,6 @@ app.post("/photos", upload.any(), async (req, res) => {
       req.files[0].buffer,
       req.files[0].originalname,
     );
-    console.log(data);
     res.status(200).json({ successe: true, data: data, result: result });
     return;
   } catch (error) {
@@ -54,13 +51,12 @@ app.post("/photos", upload.any(), async (req, res) => {
   }
 });
 
-app.get("/get_photos", async (req, res) => {
+app.get("/photos", async (req, res) => {
   const id = req.query["user_id"];
   try {
     const data = await knex(STOCK_DATA)
-      .select("photo_name", "create_date")
+      .select("photo_name", "create_date", "id")
       .where("user_id", id);
-    console.log("data", data[0]);
     const result = await Promise.all(
       data.map(async (photo) => {
         console.log("photo", photo);
@@ -68,15 +64,14 @@ app.get("/get_photos", async (req, res) => {
         const res_object = {
           url: url,
           create_date: photo.create_date,
+          id: photo.id,
         };
         return res_object;
       }),
     );
-    console.log(result);
     res.status(200).json({ successe: true, data: result });
     return;
   } catch (error) {
-    console.error(error);
     res.status(500).json({ successe: false, data: "写真取得失敗" });
     return;
   }
