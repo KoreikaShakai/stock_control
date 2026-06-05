@@ -7,9 +7,6 @@ import { News } from "./components/News.jsx";
 import { StockList } from "./components/StockList.jsx";
 import { useState } from "react";
 
-// デモ用ID
-window.localStorage.setItem("user_id", "abcde");
-
 function App() {
   const [isUpload, setIsUpload] = useState(false);
   const [open, setOpen] = useState(false);

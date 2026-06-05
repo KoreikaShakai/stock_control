@@ -8,12 +8,11 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 export function Header({ open, setOpen }) {
   const handleOpen = () => setOpen((is) => true);
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("userId");
-    // 下のリンクはルーターに準ずる
-    // navigate("/login");
+    localStorage.removeItem("user_id");
+    navigate("/");
   };
 
   return (
