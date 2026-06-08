@@ -18,7 +18,7 @@ const createResponseBody = () => {
               to: "ja",
             });
             post.content_ja = resTranslate.text;
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 2000));
           } catch (transError) {
             console.error("翻訳エラー:", transError.message);
             post.content_ja = "(翻訳失敗)";

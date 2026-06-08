@@ -8,7 +8,7 @@ const client = new ApifyClient({
 const getTrump = async () => {
   const input = {
     truthSocialUsername: ["realDonaldTrump"],
-    maxPosts: 5,
+    maxPosts: 20,
     excludeReplies: true,
     includeReblogs: false,
     cleanContent: true,
