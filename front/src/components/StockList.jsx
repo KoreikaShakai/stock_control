@@ -45,7 +45,9 @@ export function StockList({ isUpload, setIsUpload }) {
   useEffect(() => {
     fetch(`/photos?user_id=${localStorage.getItem("user_id")}`)
       .then((res) => res.json())
-      .then((res) => setPhotos((list) => res.data));
+      .then((res) => {
+        console.log("res",res)
+        setPhotos((list) => res.data)});
   }, [isUpload]);
 
   return (
