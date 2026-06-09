@@ -7,6 +7,7 @@ const { translate } = require("@vitalets/google-translate-api");
 const { createResponseBody } = require("./view/views");
 const { getPhotos, uploadPhoto, s3GetSignedUrl } = require("./util/index");
 const { responseTrump } = createResponseBody();
+const { rakuten } = require("./view/rakuten");
 const knex = require("./knex");
 const STOCK_DATA = "stock";
 const NEWS_DATA = "news";
@@ -104,6 +105,12 @@ app.delete("/delete", async (req, res) => {
     res.status(500).json({ successe: false, data: "削除失敗" });
     return;
   }
+});
+
+app.get("/rakuten", async (req, res) => {
+  console.log("un");
+  const data = await rakuten();
+  res.json(data);
 });
 
 app.listen(PORT, () => {
