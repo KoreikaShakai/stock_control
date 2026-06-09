@@ -7,6 +7,7 @@ import {
   IconButton,
   Typography,
   Box,
+  Checkbox,
 } from "@mui/material";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,6 +20,7 @@ export function StockList({ isUpload, setIsUpload }) {
   const [rakutenView, setRakutenView] = useState(-1);
   const [photos, setPhotos] = useState([]);
   const refCard = useRef("");
+  const [selectedPhotos, setSelectedPhotos] = useState([]);
 
   const handleUpdate = async (event) => {
     const req = {
@@ -46,6 +48,27 @@ export function StockList({ isUpload, setIsUpload }) {
     setIsUpload((is) => !is);
   };
 
+  const handleSelect = async (stockId) => {
+    const arr = [...selectedPhotos];
+    arr.indexOf(stockId) === -1
+      ? setSelectedPhotos([...arr, stockId])
+      : setSelectedPhotos(arr.toSpliced(arr.indexOf(stockId), 1));
+  };
+
+  const handleToggle = async () => {
+    const req = {
+      isShortageIdsList: selectedPhotos,
+    };
+    console.log("req", req);
+    await fetch("/photos", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    setSelectedPhotos([]);
+    setIsUpload((is) => !is);
+  };
+
   useEffect(() => {
     (async () => {
       const reqUser = await fetch("/api/firebase/authUser");
@@ -54,129 +77,152 @@ export function StockList({ isUpload, setIsUpload }) {
       const dataJson = await reqData.json();
       setPhotos((list) => dataJson.data);
     })();
+    fetch(`/photos?user_id=${localStorage.getItem("user_id")}`)
+      .then((res) => res.json())
+      .then((res) => setPhotos((list) => res.data));
   }, [isUpload]);
 
   return (
-    <Box
-      sx={{
-        // display: "grid",
-        // gridTemplateColumns: "repeat(4, 1fr)",
-        display: "flex",
-        margin: "10px",
-        // marginTop: "16px",
-        alignItems: "center",
-        flexWrap: "wrap",
-      }}
-    >
-      {photos.map((ele, ind) => {
-        const dateTo = dayjs(ele.create_date);
-        const dateFrom = dayjs();
-        if (rakutenView === ind) {
-          return (
-            <Card
-              sx={{
-                // maxWidth: 345,
-                maxWidth: 690,
-                textAlign: "center",
-                backgroundColor: "whitesmoke",
-                marginBottom: 4,
-                display: "flex",
-              }}
-              key={ele.create_date}
-              id={ele.id}
-            >
-              <Card sx={{ width: 345, flex: "auto" }}>
-                <CardMedia sx={{ height: 320 }} image={ele.url} />
-                <CardContent>
-                  <Typography sx={{ fontSize: 20 }}>
-                    {dayjs(ele.create_date).format("YYYY年MM月DD日")}
-                  </Typography>
-                  <Typography sx={{ fontSize: 20 }}>
-                    {dateFrom.diff(dateTo, "day")}日経過
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "space-between" }}>
-                  <IconButton size="small">
-                    <UpdateIcon
-                      fontSize="large"
-                      sx={{ color: "blue" }}
-                      onClick={handleUpdate}
-                    />
-                  </IconButton>
-                  <IconButton size="small">
-                    <DeleteIcon
-                      fontSize="large"
-                      sx={{ color: "red" }}
-                      onClick={handleRemove}
-                    />
-                  </IconButton>
-                  <button
-                    onClick={() => {
-                      setRakutenView(-1);
-                    }}
-                  >
-                    楽天
-                  </button>
-                </CardActions>
+    <>
+      {selectedPhotos.length !== 0 && (
+        <button onClick={handleToggle}>切り替え</button>
+      )}
+      <Box
+        sx={{
+          // display: "grid",
+          // gridTemplateColumns: "repeat(4, 1fr)",
+          display: "flex",
+          margin: "10px",
+          // marginTop: "16px",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {photos.map((ele, ind) => {
+          const dateTo = dayjs(ele.create_date);
+          const dateFrom = dayjs();
+          if (rakutenView === ind) {
+            return (
+              <Card
+                sx={{
+                  // maxWidth: 345,
+                  maxWidth: 690,
+                  textAlign: "center",
+                  backgroundColor: "whitesmoke",
+                  marginBottom: 4,
+                  display: "flex",
+                  opacity: ele.is_shortage ? 0.4 : 1,
+                }}
+                key={ele.create_date}
+                id={ele.id}
+              >
+                <Card sx={{ width: 345, flex: "auto" }}>
+                  <CardMedia sx={{ height: 320 }} image={ele.url} />
+                  <CardContent>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {dayjs(ele.create_date).format("YYYY年MM月DD日")}
+                    </Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {dateFrom.diff(dateTo, "day")}日経過
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: "space-between" }}>
+                    <IconButton size="small">
+                      <UpdateIcon
+                        fontSize="large"
+                        sx={{ color: "blue" }}
+                        onClick={handleUpdate}
+                      />
+                    </IconButton>
+                    <IconButton size="small">
+                      <DeleteIcon
+                        fontSize="large"
+                        sx={{ color: "red" }}
+                        onClick={handleRemove}
+                      />
+                    </IconButton>
+                    <button
+                      onClick={() => {
+                        setRakutenView(-1);
+                      }}
+                    >
+                      楽天
+                    </button>
+                  </CardActions>
+                </Card>
+                {/* ここに楽天 */}
+                <Card sx={{ width: 345, height: 320, flex: "auto" }}>
+                  <RakutenRate />
+                </Card>
               </Card>
-              {/* ここに楽天 */}
-              <Card sx={{ width: 345, height: 320, flex: "auto" }}>
-                <RakutenRate />
+            );
+          } else {
+            return (
+              <Card
+                sx={{
+                  // maxWidth: 345,
+                  maxWidth: 690,
+                  textAlign: "center",
+                  backgroundColor: "whitesmoke",
+                  marginBottom: 4,
+                  // display: "flex",
+                  overlay: "auto",
+                  opacity: ele.is_shortage ? 0.4 : 1,
+                }}
+                key={ele.create_date}
+                id={ele.id}
+              >
+                <Card sx={{ width: 345, flex: "auto" }}>
+                  <CardMedia
+                    sx={{ height: 320 }}
+                    image={ele.url}
+                    onClick={() => handleSelect(ele.id)}
+                  />
+                  <CardContent>
+                    {selectedPhotos.includes(ele.id) && (
+                      <Checkbox
+                        defaultChecked
+                        sx={{
+                          overlay: "auto",
+                        }}
+                      ></Checkbox>
+                    )}
+                    <Typography sx={{ fontSize: 20 }}>
+                      {dayjs(ele.create_date).format("YYYY年MM月DD日")}
+                    </Typography>
+                    <Typography sx={{ fontSize: 20 }}>
+                      {dateFrom.diff(dateTo, "day")}日経過
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: "space-between" }}>
+                    <IconButton size="small">
+                      <UpdateIcon
+                        fontSize="large"
+                        sx={{ color: "blue" }}
+                        onClick={handleUpdate}
+                      />
+                    </IconButton>
+                    <IconButton size="small">
+                      <DeleteIcon
+                        fontSize="large"
+                        sx={{ color: "red" }}
+                        onClick={handleRemove}
+                      />
+                    </IconButton>
+                    <button
+                      onClick={() => {
+                        setRakutenView(ind);
+                      }}
+                    >
+                      楽天
+                    </button>
+                  </CardActions>
+                </Card>
               </Card>
-            </Card>
-          );
-        } else {
-          return (
-            <Card
-              sx={{
-                // maxWidth: 345,
-                maxWidth: 690,
-                textAlign: "center",
-                backgroundColor: "whitesmoke",
-                marginBottom: 4,
-                // display: "flex",
-              }}
-              key={ele.create_date}
-              id={ele.id}
-            >
-              <Card sx={{ width: 345, flex: "auto" }}>
-                <CardMedia sx={{ height: 320 }} image={ele.url} />
-                <CardContent>
-                  <Typography sx={{ fontSize: 20 }}>
-                    {dayjs(ele.create_date).format("YYYY年MM月DD日")}
-                  </Typography>
-                  <Typography sx={{ fontSize: 20 }}>
-                    {dateFrom.diff(dateTo, "day")}日経過
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "space-between" }}>
-                  <IconButton size="small">
-                    <UpdateIcon
-                      fontSize="large"
-                      sx={{ color: "blue" }}
-                      onClick={handleUpdate}
-                    />
-                  </IconButton>
-                  <IconButton size="small">
-                    <DeleteIcon
-                      fontSize="large"
-                      sx={{ color: "red" }}
-                      onClick={handleRemove}
-                    />
-                  </IconButton>
-                  <button
-                    onClick={() => {
-                      setRakutenView(ind);
-                    }}
-                  >
-                    楽天
-                  </button>
-                </CardActions>
-              </Card>
-            </Card>
-          );
-        }
-      })}
-    </Box>
+            );
+          }
+        })}
+      </Box>
+    </>
   );
 }
