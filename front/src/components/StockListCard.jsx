@@ -8,8 +8,52 @@ import {
   Box,
   Checkbox,
 } from "@mui/material";
+import UpdateIcon from "@mui/icons-material/Update";
+import DeleteIcon from "@mui/icons-material/Delete";
+import dayjs from "dayjs";
 
-export function StockListCard({ item, selectedIds, setSelectedIds }) {
+export function StockListCard({
+  item,
+  selectedIds,
+  setSelectedIds,
+  dateFrom,
+  dateTo,
+  isUpload,
+  setIsUpload,
+}) {
+  const handleUpdate = async (event) => {
+    const req = {
+      id: event.target.parentNode.parentNode.parentNode.id,
+    };
+    if (req.id === "") return;
+    await fetch("/update_photos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    setIsUpload((is) => !is);
+  };
+
+  const handleRemove = async (event) => {
+    const req = {
+      id: event.target.parentNode.parentNode.parentNode.parentNode.id,
+    };
+    if (req.id === "") return;
+    await fetch("/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    });
+    setIsUpload((is) => !is);
+  };
+
+  const handleSelect = async (stockId) => {
+    const arr = [...selectedIds];
+    arr.indexOf(stockId) === -1
+      ? setSelectedIds([...arr, stockId])
+      : setSelectedIds(arr.toSpliced(arr.indexOf(stockId), 1));
+  };
+
   return (
     <Card
       sx={{
@@ -21,11 +65,14 @@ export function StockListCard({ item, selectedIds, setSelectedIds }) {
       }}
       key={item.create_date}
       id={item.id}
-      onClick={() => handleSelect(item.id)}
     >
-      <CardMedia sx={{ height: 320 }} image={item.url} />
+      <CardMedia
+        sx={{ height: 320 }}
+        image={item.url}
+        onClick={() => handleSelect(item.id)}
+      />
       <CardContent>
-        {selectedPhotos.includes(item.id) && (
+        {selectedIds.includes(item.id) && (
           <Checkbox
             defaultChecked
             sx={{
