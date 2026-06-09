@@ -18,7 +18,7 @@ export default defineConfig({
       "/toranpu": {
         target: "http://localhost:3000",
       },
-      "/rakuten": {
+      "/rakuten": {},
       "/api": {
         target: "http://localhost:3000",
       },
