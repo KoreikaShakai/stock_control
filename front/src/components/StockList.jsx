@@ -12,8 +12,12 @@ import {
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
+import { RakutenRate } from "./stock/RakuteRate";
 
 export function StockList({ isUpload, setIsUpload }) {
+  // ログインされていなければ戻す？
+
+  const [rakutenView, setRakutenView] = useState(-1);
   const [photos, setPhotos] = useState([]);
   const refCard = useRef("");
   const [selectedPhotos, setSelectedPhotos] = useState([]);
@@ -66,9 +70,13 @@ export function StockList({ isUpload, setIsUpload }) {
   };
 
   useEffect(() => {
-    fetch(`/photos?user_id=${localStorage.getItem("user_id")}`)
-      .then((res) => res.json())
-      .then((res) => setPhotos((list) => res.data));
+    (async () => {
+      const reqUser = await fetch("/api/firebase/authUser");
+      const userJson = await reqUser.json();
+      const reqData = await fetch(`/photos?user_id=${userJson.uid}`);
+      const dataJson = await reqData.json();
+      setPhotos((list) => dataJson.data);
+    })();
   }, [isUpload]);
 
   return (
