@@ -13,6 +13,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import { RakutenRate } from "./stock/RakuteRate";
+import { StockListCard } from "./StockListCard";
 
 export function StockList({ isUpload, setIsUpload }) {
   // ログインされていなければ戻す？
@@ -96,52 +97,58 @@ export function StockList({ isUpload, setIsUpload }) {
           const dateTo = dayjs(ele.create_date);
           const dateFrom = dayjs();
           return (
-            <Card
-              sx={{
-                maxWidth: 345,
-                textAlign: "center",
-                backgroundColor: "whitesmoke",
-                marginBottom: 4,
-                opacity: ele.is_shortage ? 0.4 : 1,
-              }}
-              key={ele.create_date}
-              id={ele.id}
-              onClick={() => handleSelect(ele.id)}
-            >
-              <CardMedia sx={{ height: 320 }} image={ele.url} />
-              <CardContent>
-                {selectedPhotos.includes(ele.id) && (
-                  <Checkbox
-                    defaultChecked
-                    sx={{
-                      overlay: "auto",
-                    }}
-                  ></Checkbox>
-                )}
-                <Typography sx={{ fontSize: 20 }}>
-                  {dayjs(ele.create_date).format("YYYY年MM月DD日")}
-                </Typography>
-                <Typography sx={{ fontSize: 20 }}>
-                  {dateFrom.diff(dateTo, "day")}日経過
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ justifyContent: "space-between" }}>
-                <IconButton size="small">
-                  <UpdateIcon
-                    fontSize="large"
-                    sx={{ color: "blue" }}
-                    onClick={handleUpdate}
-                  />
-                </IconButton>
-                <IconButton size="small">
-                  <DeleteIcon
-                    fontSize="large"
-                    sx={{ color: "red" }}
-                    onClick={handleRemove}
-                  />
-                </IconButton>
-              </CardActions>
-            </Card>
+            <StockListCard
+              key={ele.id}
+              item={ele}
+              selectedIds={selectedPhotos}
+              setSelectedIds={setSelectedPhotos}
+            />
+            // <Card
+            //   sx={{
+            //     maxWidth: 345,
+            //     textAlign: "center",
+            //     backgroundColor: "whitesmoke",
+            //     marginBottom: 4,
+            //     opacity: ele.is_shortage ? 0.4 : 1,
+            //   }}
+            //   key={ele.create_date}
+            //   id={ele.id}
+            //   onClick={() => handleSelect(ele.id)}
+            // >
+            //   <CardMedia sx={{ height: 320 }} image={ele.url} />
+            //   <CardContent>
+            //     {selectedPhotos.includes(ele.id) && (
+            //       <Checkbox
+            //         defaultChecked
+            //         sx={{
+            //           overlay: "auto",
+            //         }}
+            //       ></Checkbox>
+            //     )}
+            //     <Typography sx={{ fontSize: 20 }}>
+            //       {dayjs(ele.create_date).format("YYYY年MM月DD日")}
+            //     </Typography>
+            //     <Typography sx={{ fontSize: 20 }}>
+            //       {dateFrom.diff(dateTo, "day")}日経過
+            //     </Typography>
+            //   </CardContent>
+            //   <CardActions sx={{ justifyContent: "space-between" }}>
+            //     <IconButton size="small">
+            //       <UpdateIcon
+            //         fontSize="large"
+            //         sx={{ color: "blue" }}
+            //         onClick={handleUpdate}
+            //       />
+            //     </IconButton>
+            //     <IconButton size="small">
+            //       <DeleteIcon
+            //         fontSize="large"
+            //         sx={{ color: "red" }}
+            //         onClick={handleRemove}
+            //       />
+            //     </IconButton>
+            //   </CardActions>
+            // </Card>
           );
         })}
       </Box>
