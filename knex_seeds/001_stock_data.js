@@ -9,6 +9,7 @@ exports.seed = async function (knex) {
     {
       photo_name: "oQ7gN3eMNXglwmCV9FDOHPLz3kG2_2026-06-05_14:31:50_image.jpeg",
       user_id: "oQ7gN3eMNXglwmCV9FDOHPLz3kG2",
+      is_shortage: false,
     },
   ]);
 };
