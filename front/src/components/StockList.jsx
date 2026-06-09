@@ -45,7 +45,6 @@ export function StockList({ isUpload, setIsUpload }) {
   };
 
   const handleSelect = async (stockId) => {
-    // console.log("stockId", stockId);
     const arr = [...selectedPhotos];
     arr.indexOf(stockId) === -1
       ? setSelectedPhotos([...arr, stockId])
@@ -62,6 +61,8 @@ export function StockList({ isUpload, setIsUpload }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req),
     });
+    setSelectedPhotos([]);
+    setIsUpload((is) => !is);
   };
 
   useEffect(() => {
@@ -83,7 +84,6 @@ export function StockList({ isUpload, setIsUpload }) {
           alignItems: "center",
         }}
       >
-        {/* {console.log("photos", photos)} */}
         {photos.map((ele) => {
           const dateTo = dayjs(ele.create_date);
           const dateFrom = dayjs();
