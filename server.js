@@ -14,8 +14,17 @@ const NEWS_DATA = "news";
 const multer = require("multer");
 const upload = multer();
 
+const {
+  signIn,
+  signUp,
+  signOutF,
+  passwordReset,
+  authState,
+} = require("./firebase/index");
+
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
+
 app.get("/toranpu", (req, res) => {
   responseTrump(req, res);
 });
@@ -56,16 +65,16 @@ app.get("/photos", async (req, res) => {
   const id = req.query["user_id"];
   try {
     const data = await knex(STOCK_DATA)
-      .select("photo_name", "create_date", "id")
+      .select("photo_name", "create_date", "id", "is_shortage")
       .where("user_id", id);
     const result = await Promise.all(
       data.map(async (photo) => {
-        console.log("photo", photo);
         const url = await s3GetSignedUrl(photo.photo_name);
         const res_object = {
           url: url,
           create_date: photo.create_date,
           id: photo.id,
+          is_shortage: photo.is_shortage,
         };
         return res_object;
       }),
@@ -74,6 +83,21 @@ app.get("/photos", async (req, res) => {
     return;
   } catch (error) {
     res.status(500).json({ successe: false, data: "写真取得失敗" });
+    return;
+  }
+});
+
+app.put("/photos", async (req, res) => {
+  const { isShortageIdsList } = req.body;
+  try {
+    const result = await knex(STOCK_DATA)
+      .whereIn("id", isShortageIdsList)
+      .update({ is_shortage: knex.raw("NOT is_shortage") })
+      .returning("*");
+    res.status(200).json({ success: true, data: result });
+    return;
+  } catch (error) {
+    res.status(500).json({ success: false, data: "修正失敗" });
     return;
   }
 });
@@ -111,6 +135,49 @@ app.get("/rakuten", async (req, res) => {
   console.log("un");
   const data = await rakuten();
   res.json(data);
+app.post("/api/firebase/signIn", async (req, res) => {
+  const email = req.body.email;
+  const pass = req.body.pass;
+  const result = await signIn(email, pass);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
+  }
+});
+app.get("/api/firebase/signOut", async (req, res) => {
+  await signOutF();
+  res.json({ status: true, message: "ログアウトされました" });
+});
+app.post("/api/firebase/signUp", async (req, res) => {
+  const email = req.body.email;
+  const pass = req.body.pass;
+  const result = await signUp(email, pass);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
+  }
+});
+
+app.get("/api/firebase/authUser", async (req, res) => {
+  const loginUser = await authState();
+  if (loginUser.status) {
+    res.status(200).json(loginUser);
+  } else {
+    res.status(404).json(loginUser);
+  }
+});
+
+// 一旦無くしてもいい
+app.post("/api/firebase/passwordreset", async (req, res) => {
+  const email = req.body.email;
+  const result = await passwordReset(email);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
+  }
 });
 
 app.listen(PORT, () => {

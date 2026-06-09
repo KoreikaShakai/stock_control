@@ -36,7 +36,11 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
     }
     const date = dayjs();
     const timeStamp = date.format("YYYY-MM-DD HH:mm:ss");
-    const user_id = localStorage.getItem("user_id");
+    const user_id = await (async () => {
+      const reqUser = await fetch("/api/firebase/authUser");
+      const userJson = await reqUser.json();
+      return userJson.uid;
+    })();
 
     const file = new File(
       [buffer.buffer],
@@ -49,7 +53,7 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
     let formData = new FormData();
     formData.append("file", file);
     formData.append("fileName", file.name);
-    formData.append("user_id", localStorage.getItem("user_id"));
+    formData.append("user_id", user_id);
     await fetch(`/photos`, {
       method: "POST",
       body: formData,

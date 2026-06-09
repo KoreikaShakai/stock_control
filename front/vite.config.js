@@ -19,6 +19,7 @@ export default defineConfig({
         target: "http://localhost:3000",
       },
       "/rakuten": {
+      "/api": {
         target: "http://localhost:3000",
       },
     },

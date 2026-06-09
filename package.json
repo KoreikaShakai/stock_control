@@ -11,7 +11,8 @@
     "migrate": "npx knex migrate:latest",
     "migrate-make": "npx knex migrate:make",
     "seed": "npx knex seed:run",
-    "seed-make": "npx knex seed:make"
+    "seed-make": "npx knex seed:make",
+    "db:reset": "knex migrate:rollback --all && knex migrate:latest && knex seed:run"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
     "apify-client": "^2.23.3",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "firebase": "^12.14.0",
     "knex": "^3.2.10",
     "multer": "^2.1.1",
     "node-fetch": "^2.7.0",
