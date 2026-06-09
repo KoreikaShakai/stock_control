@@ -10,8 +10,8 @@ export function Header({ open, setOpen }) {
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("user_id");
+  const handleLogout = async () => {
+    await fetch("/api/firebase/signOut");
     navigate("/");
   };
 
