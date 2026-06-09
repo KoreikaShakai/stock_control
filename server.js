@@ -136,6 +136,7 @@ app.get("/rakuten", async (req, res) => {
   const data = await rakuten();
   res.json(data);
 });
+
 app.post("/api/firebase/signIn", async (req, res) => {
   const email = req.body.email;
   const pass = req.body.pass;
