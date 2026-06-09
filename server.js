@@ -7,6 +7,7 @@ const { translate } = require("@vitalets/google-translate-api");
 const { createResponseBody } = require("./view/views");
 const { getPhotos, uploadPhoto, s3GetSignedUrl } = require("./util/index");
 const { responseTrump } = createResponseBody();
+const { rakuten } = require("./view/rakuten");
 const knex = require("./knex");
 const STOCK_DATA = "stock";
 const NEWS_DATA = "news";
@@ -130,6 +131,10 @@ app.delete("/delete", async (req, res) => {
   }
 });
 
+app.get("/rakuten", async (req, res) => {
+  console.log("un");
+  const data = await rakuten();
+  res.json(data);
 app.post("/api/firebase/signIn", async (req, res) => {
   const email = req.body.email;
   const pass = req.body.pass;
