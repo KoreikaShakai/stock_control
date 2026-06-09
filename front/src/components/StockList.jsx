@@ -125,7 +125,6 @@ export function StockList({ isUpload, setIsUpload }) {
                     onClick={handleUpdate}
                   />
                 </IconButton>
-                <p>{`状況: ${ele.is_shortage}`}</p>
                 <IconButton size="small">
                   <DeleteIcon
                     fontSize="large"
