@@ -1,18 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  Card,
-  CardActions,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Typography,
-  Box,
-  Checkbox,
-} from "@mui/material";
-import UpdateIcon from "@mui/icons-material/Update";
-import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
-import { RakutenRate } from "./stock/RakuteRate";
+import { Box } from "@mui/material";
+import { StockListCard } from "./StockListCard";
 
 export function StockList({ isUpload, setIsUpload }) {
   // ログインされていなければ戻す？
@@ -21,39 +9,6 @@ export function StockList({ isUpload, setIsUpload }) {
   const [photos, setPhotos] = useState([]);
   const refCard = useRef("");
   const [selectedPhotos, setSelectedPhotos] = useState([]);
-
-  const handleUpdate = async (event) => {
-    const req = {
-      id: event.target.parentNode.parentNode.parentNode.id,
-    };
-    if (req.id === "") return;
-    await fetch("/update_photos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req),
-    });
-    setIsUpload((is) => !is);
-  };
-
-  const handleRemove = async (event) => {
-    const req = {
-      id: event.target.parentNode.parentNode.parentNode.parentNode.id,
-    };
-    if (req.id === "") return;
-    await fetch("/delete", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req),
-    });
-    setIsUpload((is) => !is);
-  };
-
-  const handleSelect = async (stockId) => {
-    const arr = [...selectedPhotos];
-    arr.indexOf(stockId) === -1
-      ? setSelectedPhotos([...arr, stockId])
-      : setSelectedPhotos(arr.toSpliced(arr.indexOf(stockId), 1));
-  };
 
   const handleToggle = async () => {
     const req = {
@@ -99,126 +54,31 @@ export function StockList({ isUpload, setIsUpload }) {
         }}
       >
         {photos.map((ele, ind) => {
-          const dateTo = dayjs(ele.create_date);
-          const dateFrom = dayjs();
           if (rakutenView === ind) {
             return (
-              <Card
-                sx={{
-                  // maxWidth: 345,
-                  maxWidth: 690,
-                  textAlign: "center",
-                  backgroundColor: "whitesmoke",
-                  marginBottom: 4,
-                  display: "flex",
-                  opacity: ele.is_shortage ? 0.4 : 1,
-                }}
+              <StockListCard
                 key={ele.create_date}
-                id={ele.id}
-              >
-                <Card sx={{ width: 345, flex: "auto" }}>
-                  <CardMedia sx={{ height: 320 }} image={ele.url} />
-                  <CardContent>
-                    <Typography sx={{ fontSize: 20 }}>
-                      {dayjs(ele.create_date).format("YYYY年MM月DD日")}
-                    </Typography>
-                    <Typography sx={{ fontSize: 20 }}>
-                      {dateFrom.diff(dateTo, "day")}日経過
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: "space-between" }}>
-                    <IconButton size="small">
-                      <UpdateIcon
-                        fontSize="large"
-                        sx={{ color: "blue" }}
-                        onClick={handleUpdate}
-                      />
-                    </IconButton>
-                    <IconButton size="small">
-                      <DeleteIcon
-                        fontSize="large"
-                        sx={{ color: "red" }}
-                        onClick={handleRemove}
-                      />
-                    </IconButton>
-                    <button
-                      onClick={() => {
-                        setRakutenView(-1);
-                      }}
-                    >
-                      楽天
-                    </button>
-                  </CardActions>
-                </Card>
-                {/* ここに楽天 */}
-                <Card sx={{ width: 345, height: 320, flex: "auto" }}>
-                  <RakutenRate />
-                </Card>
-              </Card>
+                ele={ele}
+                ind={ind}
+                isRakutenView={true}
+                selectedIds={selectedPhotos}
+                setSelectedIds={setSelectedPhotos}
+                setIsUpload={setIsUpload}
+                setRakutenView={setRakutenView}
+              />
             );
           } else {
             return (
-              <Card
-                sx={{
-                  // maxWidth: 345,
-                  maxWidth: 690,
-                  textAlign: "center",
-                  backgroundColor: "whitesmoke",
-                  marginBottom: 4,
-                  // display: "flex",
-                  overlay: "auto",
-                  opacity: ele.is_shortage ? 0.4 : 1,
-                }}
+              <StockListCard
                 key={ele.create_date}
-                id={ele.id}
-              >
-                <Card sx={{ width: 345, flex: "auto" }}>
-                  <CardMedia
-                    sx={{ height: 320 }}
-                    image={ele.url}
-                    onClick={() => handleSelect(ele.id)}
-                  />
-                  <CardContent>
-                    {selectedPhotos.includes(ele.id) && (
-                      <Checkbox
-                        defaultChecked
-                        sx={{
-                          overlay: "auto",
-                        }}
-                      ></Checkbox>
-                    )}
-                    <Typography sx={{ fontSize: 20 }}>
-                      {dayjs(ele.create_date).format("YYYY年MM月DD日")}
-                    </Typography>
-                    <Typography sx={{ fontSize: 20 }}>
-                      {dateFrom.diff(dateTo, "day")}日経過
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: "space-between" }}>
-                    <IconButton size="small">
-                      <UpdateIcon
-                        fontSize="large"
-                        sx={{ color: "blue" }}
-                        onClick={handleUpdate}
-                      />
-                    </IconButton>
-                    <IconButton size="small">
-                      <DeleteIcon
-                        fontSize="large"
-                        sx={{ color: "red" }}
-                        onClick={handleRemove}
-                      />
-                    </IconButton>
-                    <button
-                      onClick={() => {
-                        setRakutenView(ind);
-                      }}
-                    >
-                      楽天
-                    </button>
-                  </CardActions>
-                </Card>
-              </Card>
+                ele={ele}
+                ind={ind}
+                isRakutenView={false}
+                selectedIds={selectedPhotos}
+                setSelectedIds={setSelectedPhotos}
+                setIsUpload={setIsUpload}
+                setRakutenView={setRakutenView}
+              />
             );
           }
         })}
