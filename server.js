@@ -13,8 +13,17 @@ const NEWS_DATA = "news";
 const multer = require("multer");
 const upload = multer();
 
+const {
+  signIn,
+  signUp,
+  signOutF,
+  passwordReset,
+  authState,
+} = require("./firebase/index");
+
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
+
 app.get("/toranpu", (req, res) => {
   responseTrump(req, res);
 });
@@ -118,6 +127,51 @@ app.delete("/delete", async (req, res) => {
     console.log("削除失敗", error);
     res.status(500).json({ successe: false, data: "削除失敗" });
     return;
+  }
+});
+
+app.post("/api/firebase/signIn", async (req, res) => {
+  const email = req.body.email;
+  const pass = req.body.pass;
+  const result = await signIn(email, pass);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
+  }
+});
+app.get("/api/firebase/signOut", async (req, res) => {
+  await signOutF();
+  res.json({ status: true, message: "ログアウトされました" });
+});
+app.post("/api/firebase/signUp", async (req, res) => {
+  const email = req.body.email;
+  const pass = req.body.pass;
+  const result = await signUp(email, pass);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
+  }
+});
+
+app.get("/api/firebase/authUser", async (req, res) => {
+  const loginUser = await authState();
+  if (loginUser.status) {
+    res.status(200).json(loginUser);
+  } else {
+    res.status(404).json(loginUser);
+  }
+});
+
+// 一旦無くしてもいい
+app.post("/api/firebase/passwordreset", async (req, res) => {
+  const email = req.body.email;
+  const result = await passwordReset(email);
+  if (result.status) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json(result);
   }
 });
 
