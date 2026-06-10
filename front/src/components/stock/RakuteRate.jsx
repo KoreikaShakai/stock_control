@@ -4,6 +4,7 @@ import {
   TableContainer,
   TableHead,
   Paper,
+  Tooltip,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
@@ -87,17 +88,17 @@ export function RakutenRate() {
     },
     { field: "itemPrices", headerName: "価格" },
     { field: "reviewAves", headerName: "評価" },
-    { field: "itemNames", headerName: "商品名", width: 100 },
+    { field: "itemNames", headerName: "商品名" },
   ];
 
-  const paginationModel = { page: 0, pageSize: 5 };
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <Paper sx={{ flex: "auto" }}>
       <DataGrid
         rows={dataList}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[10]}
         sx={{ border: 0 }}
       />
     </Paper>

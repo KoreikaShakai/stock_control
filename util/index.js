@@ -16,6 +16,8 @@ const BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 const IDENTITY_POOL_ID = process.env.AWS_IDENTITY_POOL_ID;
 console.log(REGION, BUCKET_NAME, IDENTITY_POOL_ID);
 
+console.log(REGION, BUCKET_NAME, IDENTITY_POOL_ID);
+
 const s3Client = new S3Client({
   region: REGION,
   credentials: fromCognitoIdentityPool({

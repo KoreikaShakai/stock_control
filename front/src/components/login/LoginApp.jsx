@@ -25,8 +25,8 @@ export function LoginApp() {
 
   return (
     <div className="app-container">
-      <p>【 利用者ID「認証」】</p>
-      <p>利用者IDを入力してください（メールアドレス）</p>
+      <p id="user">【 利用者ID「認証」】</p>
+      <p id="user_id">利用者IDを入力してください（メールアドレス）</p>
       <InputEmail />
       <p>パスワードを入力してください（英数字８桁以上）</p>
       <InputPass />
