@@ -32,12 +32,6 @@ export function News() {
 
   return (
     <div style={{ justifyItems: "center" }}>
-      <a href={itemLink} target="_blank" rel="noopener noreferrer">
-        <img src={itemImage} alt={itemName} />
-      </a>
-      <h2>{itemName}</h2>
-      <h2>評価{reviewAve}</h2>
-      <h2>{itemPrice}円</h2>
       <Button
         sx={{ fontSize: 48 }}
         onClick={() => {

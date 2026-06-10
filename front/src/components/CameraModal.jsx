@@ -31,6 +31,7 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
     const image = webCamRef.current?.getScreenshot();
     const blob = atob(image.replace(/^.*,/, ""));
     let buffer = new Uint8Array(blob.length);
+    console.log(buffer);
     for (let i = 0; i < blob.length; i++) {
       buffer[i] = blob.charCodeAt(i);
     }
@@ -51,9 +52,11 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
     );
 
     let formData = new FormData();
+    console.log(file);
     formData.append("file", file);
     formData.append("fileName", file.name);
     formData.append("user_id", user_id);
+    console.log(formData);
     await fetch(`/photos`, {
       method: "POST",
       body: formData,

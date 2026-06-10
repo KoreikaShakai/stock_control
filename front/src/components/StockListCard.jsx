@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import dayjs from "dayjs";
 import { RakutenRate } from "./stock/RakuteRate";
+import { yellow } from "@mui/material/colors";
 
 export function StockListCard({
   ele,
@@ -102,13 +104,20 @@ export function StockListCard({
               onClick={handleRemove}
             />
           </IconButton>
-          <button onClick={() => setRakutenView(isRakutenView ? -1 : ind)}>
+          <IconButton size="small">
+            <AddShoppingCartIcon
+              fontSize="large"
+              sx={{ color: "black" }}
+              onClick={() => setRakutenView(isRakutenView ? -1 : ind)}
+            ></AddShoppingCartIcon>
+          </IconButton>
+          {/* <button onClick={() => setRakutenView(isRakutenView ? -1 : ind)}>
             楽天
-          </button>
+          </button> */}
         </CardActions>
       </Card>
       {isRakutenView && (
-        <Card sx={{ width: 345, height: 320, flex: "auto" }}>
+        <Card sx={{ width: 345, height: 480, flex: "auto" }}>
           <RakutenRate />
         </Card>
       )}
