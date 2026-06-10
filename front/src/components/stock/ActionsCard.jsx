@@ -31,7 +31,15 @@ export function ActionsCard({ id, ind, status }) {
       <IconButton>
         <AddShoppingCartIcon
           sx={{ color: "black" }}
-          onClick={() => setRakutenView(rakutenView === -1 ? ind : -1)}
+          onClick={() => {
+            if (rakutenView === -1) {
+              setRakutenView(ind);
+            } else if (rakutenView === ind) {
+              setRakutenView(-1);
+            } else {
+              setRakutenView(ind);
+            }
+          }}
         ></AddShoppingCartIcon>
       </IconButton>
       {/* <button onClick={() => setRakutenView(rakutenView === -1 ? ind : -1)}>

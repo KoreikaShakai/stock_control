@@ -36,7 +36,6 @@ app.post("/photos", upload.any(), async (req, res) => {
     res.status(200).json({ successe: true, data: data, result: result });
     return;
   } catch (error) {
-    console.error(error);
     return;
   }
 });
@@ -61,7 +60,6 @@ app.get("/photos", async (req, res) => {
     );
     res.status(200).json({ successe: true, data: result });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ successe: false, data: "写真取得失敗" });
   }
 });
