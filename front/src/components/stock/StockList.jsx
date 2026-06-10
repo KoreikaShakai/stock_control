@@ -19,7 +19,7 @@ export function StockList() {
       }
       const reqData = await fetch(`/photos?user_id=${userJson.uid}`); //このid使いたくない
       const dataJson = await reqData.json();
-      setPhotos(dataJson.data.sort((a, b) => b - a));
+      setPhotos(dataJson.data.sort((a, b) => b.status - a.status));
     })();
   }, [reData]);
 
