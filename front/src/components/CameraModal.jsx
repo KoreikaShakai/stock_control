@@ -4,6 +4,9 @@ import Webcam from "react-webcam";
 import { Button, Typography, Box, Modal, IconButton } from "@mui/material";
 import dayjs from "dayjs";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { atomReData } from "./stock/atoms";
+import { atomOpen } from "./header/atoms";
+import { useAtom, useSetAtom } from "jotai";
 
 const style = {
   position: "absolute",
@@ -18,10 +21,10 @@ const style = {
   justifyItems: "center",
 };
 
-export function CameraModal({ open, setOpen, setIsUpload }) {
-  const handleClose = () => setOpen((is) => false);
+export function CameraModal() {
+  const [reData, setRedata] = useAtom(atomReData);
+  const [open, setOpen] = useAtom(atomOpen);
   const webCamRef = useRef(null);
-  //   const navigate = useNavigate();
 
   const videoConstraints = {
     facingMode: "environment",
@@ -29,8 +32,11 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
 
   const onClickScreenShot = useCallback(async () => {
     const image = webCamRef.current?.getScreenshot();
+    console.log("image", image);
     const blob = atob(image.replace(/^.*,/, ""));
+    console.log("blob", blob);
     let buffer = new Uint8Array(blob.length);
+    console.log(buffer);
     for (let i = 0; i < blob.length; i++) {
       buffer[i] = blob.charCodeAt(i);
     }
@@ -51,26 +57,27 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
     );
 
     let formData = new FormData();
+    console.log(file);
     formData.append("file", file);
     formData.append("fileName", file.name);
     formData.append("user_id", user_id);
+    console.log(formData);
     await fetch(`/photos`, {
       method: "POST",
       body: formData,
     });
-    setIsUpload((is) => !is);
-    setOpen((is) => false);
+    // setRedata(()=>!reData);
+    setRedata(!reData);
+    setOpen(false);
   }, [webCamRef]);
-
-  const goToErrorPage = () => {
-    // navigate("/error");
-  };
 
   return (
     <div>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => {
+          setOpen(false);
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -83,7 +90,6 @@ export function CameraModal({ open, setOpen, setIsUpload }) {
               audio={false}
               disablePictureInPicture={true}
               screenshotFormat={"image/jpeg"}
-              onUserMediaError={goToErrorPage}
               videoConstraints={videoConstraints}
               width={"100%"}
               ref={webCamRef}

@@ -1,19 +1,16 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { AppBar, Box, Toolbar, Typography, IconButton } from "@mui/material";
 import { CameraModal } from "./CameraModal";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { useAtom } from "jotai";
+import { atomOpen } from "./header/atoms";
 
-export function Header({ open, setOpen }) {
-  const handleOpen = () => setOpen((is) => true);
+export function Header() {
+  const [open, setOpen] = useAtom(atomOpen);
 
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await fetch("/api/firebase/signOut");
-    navigate("/");
-  };
 
   return (
     <Box sx={{ textAlign: "center" }}>
@@ -25,7 +22,10 @@ export function Header({ open, setOpen }) {
             edge="start"
             aria-label="logout"
             sx={{ mr: 2, backgroundColor: "white" }}
-            onClick={handleLogout}
+            onClick={async () => {
+              await fetch("/api/firebase/signOut");
+              navigate("/");
+            }}
           >
             <LogoutIcon fontSize="large" sx={{ color: "red" }} />
           </IconButton>
@@ -38,7 +38,9 @@ export function Header({ open, setOpen }) {
             color="success"
             aria-label="logout"
             sx={{ mr: 2, backgroundColor: "white" }}
-            onClick={handleOpen}
+            onClick={() => {
+              setOpen(true);
+            }}
           >
             <PlaylistAddIcon fontSize="large" />
           </IconButton>
