@@ -1,6 +1,5 @@
 import { Card, CardMedia } from "@mui/material";
 import { RakutenRate } from "./RakuteRate";
-import { ChangeMode } from "./ChangeMode";
 import { DateCard } from "./DateCard";
 import { ActionsCard } from "./ActionsCard";
 import { atomRakutenView } from "./atoms";

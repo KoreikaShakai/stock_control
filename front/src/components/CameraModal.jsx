@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { atomReData } from "./stock/atoms";
 import { atomOpen } from "./header/atoms";
-import { useAtom } from "jotai";
+import { useSetAtom, useAtom } from "jotai";
 
 const style = {
   position: "absolute",
@@ -21,7 +21,7 @@ const style = {
 };
 
 export function CameraModal() {
-  const [reData, setRedata] = useAtom(atomReData);
+  const setRedata = useSetAtom(atomReData);
   const [open, setOpen] = useAtom(atomOpen);
   const webCamRef = useRef(null);
   const [name, setName] = useState("");
@@ -30,7 +30,7 @@ export function CameraModal() {
     facingMode: "environment",
   };
 
-  const onClickScreenShot = useCallback(async () => {
+  const onClickScreenShot = async () => {
     const image = webCamRef.current?.getScreenshot();
     const blob = atob(image.replace(/^.*,/, ""));
     let buffer = new Uint8Array(blob.length);
@@ -62,10 +62,10 @@ export function CameraModal() {
       method: "POST",
       body: formData,
     });
-    // setRedata(()=>!reData);
-    setRedata(!reData);
+    setRedata((i) => i + 1);
     setOpen(false);
-  }, [webCamRef]);
+    setName("");
+  };
 
   return (
     <div>
@@ -110,6 +110,7 @@ export function CameraModal() {
               placeholder="名前を入力してください"
               onChange={(e) => {
                 setName(e.target.value);
+                console.log(name);
               }}
             />
           </div>

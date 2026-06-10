@@ -32,7 +32,6 @@ export function RakutenRate() {
       field: "itemImages",
       headerName: "画像",
       renderCell: (params) => {
-        console.log(params);
         return (
           <>
             <a
