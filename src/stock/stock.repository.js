@@ -1,16 +1,14 @@
 function createStockRepository(knex, table = "stock") {
-  const create = async (userId, fileName) => {
+  const create = async (userId, fileName, name) => {
     const result = await knex(table).insert(
-      { user_id: userId, photo_name: fileName },
+      { user_id: userId, photo_name: fileName, name: name },
       ["*"],
     );
     return result;
   };
 
   const findListByUserId = async (userId) => {
-    const result = await knex(table)
-      .select("photo_name", "create_date", "id", "is_shortage", "status")
-      .where("user_id", userId);
+    const result = await knex(table).where("user_id", userId);
     return result;
   };
 
