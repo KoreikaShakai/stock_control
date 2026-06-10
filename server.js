@@ -24,21 +24,15 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 
 app.post("/photos", upload.any(), async (req, res) => {
-  console.log(1234);
   const userId = req.body.user_id;
+  const { name } = req.body;
   const fileName = req.files[0].originalname;
-  const create_data = {
-    user_id: userId,
-    photo_name: fileName,
-  };
   try {
-    const result = await knex(STOCK_DATA).insert(create_data, ["*"]);
-    // const result = await stockRepository.create(userId, fileName);
+    const result = await stockRepository.create(userId, fileName, name);
     const data = await uploadPhoto(
       req.files[0].buffer,
       req.files[0].originalname,
     );
-    console.log("data", data);
     res.status(200).json({ successe: true, data: data, result: result });
     return;
   } catch (error) {

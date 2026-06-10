@@ -11,6 +11,7 @@ exports.seed = async function (knex) {
       user_id: "oQ7gN3eMNXglwmCV9FDOHPLz3kG2",
       is_shortage: false,
       status: 1,
+      name: "water",
     },
   ]);
 };
