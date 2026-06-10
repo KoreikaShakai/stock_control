@@ -9,10 +9,12 @@ const {
   fromCognitoIdentityPool,
 } = require("@aws-sdk/credential-provider-cognito-identity");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+require("dotenv").config();
 
 const REGION = process.env.AWS_REGION;
 const BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 const IDENTITY_POOL_ID = process.env.AWS_IDENTITY_POOL_ID;
+console.log(REGION, BUCKET_NAME, IDENTITY_POOL_ID);
 
 console.log(REGION, BUCKET_NAME, IDENTITY_POOL_ID);
 
