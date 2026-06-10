@@ -13,7 +13,6 @@ export function ChangeMode({ id, status }) {
     setReData(!reData);
   }
 
-  console.log({ id, status });
   return (
     <ButtonGroup variant="contained">
       <Button

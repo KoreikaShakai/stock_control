@@ -5,7 +5,7 @@ import { atomReData } from "./atoms";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
 
-export function StockList({ isUpload, setIsUpload }) {
+export function StockList() {
   const nav = useNavigate();
   const reData = useAtomValue(atomReData);
   const [photos, setPhotos] = useState([]);
@@ -19,9 +19,7 @@ export function StockList({ isUpload, setIsUpload }) {
       }
       const reqData = await fetch(`/photos?user_id=${userJson.uid}`); //このid使いたくない
       const dataJson = await reqData.json();
-      console.log(photos);
-      setPhotos(dataJson.data);
-      console.log(photos);
+      setPhotos(dataJson.data.sort((a, b) => b - a));
     })();
   }, [reData]);
 

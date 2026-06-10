@@ -34,7 +34,6 @@ app.post("/photos", upload.any(), async (req, res) => {
   try {
     const result = await knex(STOCK_DATA).insert(create_data, ["*"]);
     // const result = await stockRepository.create(userId, fileName);
-    console.log(req.files[0]);
     const data = await uploadPhoto(
       req.files[0].buffer,
       req.files[0].originalname,
@@ -43,7 +42,6 @@ app.post("/photos", upload.any(), async (req, res) => {
     res.status(200).json({ successe: true, data: data, result: result });
     return;
   } catch (error) {
-    console.error(error);
     return;
   }
 });
@@ -53,11 +51,9 @@ app.get("/photos", async (req, res) => {
   const userId = req.query["user_id"];
   try {
     const data = await stockRepository.findListByUserId(userId);
-    console.log("data", data);
     const result = await Promise.all(
       data.map(async (photo) => {
         const url = await s3GetSignedUrl(photo.photo_name);
-        console.log(userId);
         const res_object = {
           url: url,
           create_date: photo.create_date,
@@ -70,7 +66,6 @@ app.get("/photos", async (req, res) => {
     );
     res.status(200).json({ successe: true, data: result });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ successe: false, data: "写真取得失敗" });
   }
 });
