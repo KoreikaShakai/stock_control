@@ -1,6 +1,7 @@
 import { CardActions, IconButton, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { ChangeMode } from "./ChangeMode";
 import { atomReData, atomRakutenView } from "./atoms";
 import { useAtom } from "jotai";
@@ -27,9 +28,15 @@ export function ActionsCard({ id, ind, status }) {
           onClick={handleRemove}
         />
       </IconButton>
-      <button onClick={() => setRakutenView(rakutenView === -1 ? ind : -1)}>
+      <IconButton>
+        <AddShoppingCartIcon
+          sx={{ color: "black" }}
+          onClick={() => setRakutenView(rakutenView === -1 ? ind : -1)}
+        ></AddShoppingCartIcon>
+      </IconButton>
+      {/* <button onClick={() => setRakutenView(rakutenView === -1 ? ind : -1)}>
         楽天
-      </button>
+      </button> */}
     </CardActions>
   );
 }
