@@ -21,6 +21,9 @@ const {
   passwordReset,
   authState,
 } = require("./firebase/index");
+const { initStock } = require("./src/stock");
+
+const stockRepository = initStock(knex);
 
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
@@ -29,26 +32,16 @@ app.get("/toranpu", (req, res) => {
   responseTrump(req, res);
 });
 
-app.get("/stock_dates", async (req, res) => {
-  const id = req.query["user_id"];
-  try {
-    const result = await knex(STOCK_DATA).where("id", id);
-    res.status(200).json(result);
-    return;
-  } catch (error) {
-    return;
-  }
-});
-
 app.post("/photos", upload.any(), async (req, res) => {
-  const id = req.body.user_id;
-  const file_name = req.files[0].originalname;
-  const create_data = {
-    user_id: id,
-    photo_name: file_name,
-  };
+  const userId = req.body.user_id;
+  const fileName = req.files[0].originalname;
+  // const create_data = {
+  //   user_id: userId,
+  //   photo_name: fileName,
+  // };
   try {
     const result = await knex(STOCK_DATA).insert(create_data, ["*"]);
+    const result = await stockRepository.create(userId, fileName);
     const data = await uploadPhoto(
       req.files[0].buffer,
       req.files[0].originalname,
@@ -62,11 +55,10 @@ app.post("/photos", upload.any(), async (req, res) => {
 });
 
 app.get("/photos", async (req, res) => {
-  const id = req.query["user_id"];
+  // uid取得
+  const userId = req.query["user_id"];
   try {
-    const data = await knex(STOCK_DATA)
-      .select("photo_name", "create_date", "id", "is_shortage")
-      .where("user_id", id);
+    const data = await stockRepository.findListByUserId(userId);
     const result = await Promise.all(
       data.map(async (photo) => {
         const url = await s3GetSignedUrl(photo.photo_name);
@@ -75,6 +67,7 @@ app.get("/photos", async (req, res) => {
           create_date: photo.create_date,
           id: photo.id,
           is_shortage: photo.is_shortage,
+          status: photo.status,
         };
         return res_object;
       }),
@@ -87,16 +80,16 @@ app.get("/photos", async (req, res) => {
   }
 });
 
-app.put("/photos", async (req, res) => {
-  const { isShortageIdsList } = req.body;
+// patchでstockのid、statusを受け取る
+// 日時情報も合わせてこのapiで更新する
+
+app.put("/stock", async (req, res) => {
+  const { id, newStockStatus } = req.body;
   try {
-    const result = await knex(STOCK_DATA)
-      .whereIn("id", isShortageIdsList)
-      .update({ is_shortage: knex.raw("NOT is_shortage") })
-      .returning("*");
+    const result = await stockRepository.updateStatusById(id, newStockStatus);
     res.status(200).json({ success: true, data: result });
     return;
-  } catch (error) {
+  } catch {
     res.status(500).json({ success: false, data: "修正失敗" });
     return;
   }
@@ -119,7 +112,7 @@ app.post("/update_photos", async (req, res) => {
 });
 
 app.delete("/delete", async (req, res) => {
-  const id = req.body.id;
+  const { id } = req.body;
   try {
     const result = await knex(STOCK_DATA).where("id", id).del(["*"]);
     res.status(200).json({ success: true, data: result });
