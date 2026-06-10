@@ -11,6 +11,7 @@ exports.up = function (knex) {
     table.boolean("is_shortage").defaultTo(false).notNullable();
     // 1: 在庫あり 2: 在庫なし 3:購入済みで商品到着待ち
     table.integer("status").defaultTo(1);
+    table.string("name", 64).notNullable();
   });
 };
 
