@@ -17,7 +17,6 @@ export function StockListCard({ ele, ind }) {
         marginBottom: 4,
         overlay: "auto",
         display: "flex",
-        opacity: ele.status !== 1 ? 0.4 : 1,
       }}
     >
       <Card sx={{ width: 345, flex: "auto" }}>

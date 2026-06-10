@@ -8,15 +8,11 @@ import { StockList } from "./components/stock/StockList.jsx";
 import { useState } from "react";
 
 function App() {
-  const [isUpload, setIsUpload] = useState(false);
-  const [open, setOpen] = useState(false);
-
   return (
     <>
-      <Header open={open} setOpen={setOpen} />
-      <CameraModal setIsUpload={setIsUpload} open={open} setOpen={setOpen} />
-      <News></News>
-      <StockList isUpload={isUpload} setIsUpload={setIsUpload} />
+      <Header />
+      <CameraModal />
+      <StockList />
     </>
   );
 }

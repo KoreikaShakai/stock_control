@@ -2,25 +2,22 @@ import { ButtonGroup, Button } from "@mui/material";
 import { atomReData } from "./atoms";
 import { useAtom } from "jotai";
 
-export function ChangeMode({ id ,status}) {
+export function ChangeMode({ id, status }) {
   const [reData, setReData] = useAtom(atomReData);
   async function statusChange(status) {
-    await fetch("/api/stock", {
+    await fetch("/stock", {
       method: "PATCH",
-      headers: "",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: id, status: status }),
     });
     setReData(!reData);
   }
 
-  function statusDisabled(v){
-    
-    return {}
-  }
-
+  console.log({ id, status });
   return (
     <ButtonGroup variant="contained">
-      <Button sx={}
+      <Button
+        disabled={1 === status}
         onClick={() => {
           statusChange(1);
         }}
@@ -28,6 +25,7 @@ export function ChangeMode({ id ,status}) {
         ある
       </Button>
       <Button
+        disabled={3 === status}
         onClick={() => {
           statusChange(3);
         }}
@@ -35,6 +33,7 @@ export function ChangeMode({ id ,status}) {
         発注中
       </Button>
       <Button
+        disabled={2 === status}
         onClick={() => {
           statusChange(2);
         }}

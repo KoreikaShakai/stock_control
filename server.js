@@ -2,15 +2,10 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const { getTrump } = require("./getTruth");
-const { translate } = require("@vitalets/google-translate-api");
-const { createResponseBody } = require("./view/views");
 const { getPhotos, uploadPhoto, s3GetSignedUrl } = require("./util/index");
-const { responseTrump } = createResponseBody();
 const { rakuten } = require("./view/rakuten");
 const knex = require("./knex");
 const STOCK_DATA = "stock";
-const NEWS_DATA = "news";
 const multer = require("multer");
 const upload = multer();
 
@@ -28,24 +23,23 @@ const stockRepository = initStock(knex);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 
-app.get("/toranpu", (req, res) => {
-  responseTrump(req, res);
-});
-
 app.post("/photos", upload.any(), async (req, res) => {
+  console.log(1234);
   const userId = req.body.user_id;
   const fileName = req.files[0].originalname;
-  // const create_data = {
-  //   user_id: userId,
-  //   photo_name: fileName,
-  // };
+  const create_data = {
+    user_id: userId,
+    photo_name: fileName,
+  };
   try {
     const result = await knex(STOCK_DATA).insert(create_data, ["*"]);
-    const result = await stockRepository.create(userId, fileName);
+    // const result = await stockRepository.create(userId, fileName);
+    console.log(req.files[0]);
     const data = await uploadPhoto(
       req.files[0].buffer,
       req.files[0].originalname,
     );
+    console.log("data", data);
     res.status(200).json({ successe: true, data: data, result: result });
     return;
   } catch (error) {
@@ -59,9 +53,11 @@ app.get("/photos", async (req, res) => {
   const userId = req.query["user_id"];
   try {
     const data = await stockRepository.findListByUserId(userId);
+    console.log("data", data);
     const result = await Promise.all(
       data.map(async (photo) => {
         const url = await s3GetSignedUrl(photo.photo_name);
+        console.log(userId);
         const res_object = {
           url: url,
           create_date: photo.create_date,
@@ -73,54 +69,30 @@ app.get("/photos", async (req, res) => {
       }),
     );
     res.status(200).json({ successe: true, data: result });
-    return;
   } catch (error) {
-    res.status(500).json({ successe: false, data: "写真取得失敗" });
-    return;
+    console.log(error);
+    res.status(404).json({ successe: false, data: "写真取得失敗" });
   }
 });
 
-// patchでstockのid、statusを受け取る
-// 日時情報も合わせてこのapiで更新する
-
-app.put("/stock", async (req, res) => {
-  const { id, newStockStatus } = req.body;
+app.patch("/stock", async (req, res) => {
+  const { id, status } = req.body;
   try {
-    const result = await stockRepository.updateStatusById(id, newStockStatus);
+    await stockRepository.updateStatusById(id, status);
+    const result = await stockRepository.updateTimestampById(id);
     res.status(200).json({ success: true, data: result });
-    return;
   } catch {
-    res.status(500).json({ success: false, data: "修正失敗" });
-    return;
-  }
-});
-
-app.post("/update_photos", async (req, res) => {
-  const id = req.body.id;
-  try {
-    const result = await knex(STOCK_DATA)
-      .where("id", id)
-      .update({ create_date: knex.fn.now() }, ["*"]);
-    res.status(200).json({ success: true, data: result });
-    console.log(result);
-    return;
-  } catch (error) {
-    console.log("時刻登録失敗", error);
-    res.status(500).json({ successe: false, data: "時刻登録失敗" });
-    return;
+    res.status(404).json({ success: false, data: "修正失敗" });
   }
 });
 
 app.delete("/delete", async (req, res) => {
   const { id } = req.body;
   try {
-    const result = await knex(STOCK_DATA).where("id", id).del(["*"]);
+    const result = await stockRepository.remove(id);
     res.status(200).json({ success: true, data: result });
-    return;
   } catch (error) {
-    console.log("削除失敗", error);
-    res.status(500).json({ successe: false, data: "削除失敗" });
-    return;
+    res.status(404).json({ successe: false, data: "削除失敗" });
   }
 });
 

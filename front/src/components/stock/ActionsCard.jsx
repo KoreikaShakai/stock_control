@@ -5,7 +5,7 @@ import { ChangeMode } from "./ChangeMode";
 import { atomReData, atomRakutenView } from "./atoms";
 import { useAtom } from "jotai";
 
-export function ActionsCard({ id, ind }) {
+export function ActionsCard({ id, ind, status }) {
   const [rakutenView, setRakutenView] = useAtom(atomRakutenView);
   const [reData, setReData] = useAtom(atomReData);
   const handleRemove = async () => {
@@ -19,7 +19,7 @@ export function ActionsCard({ id, ind }) {
 
   return (
     <CardActions sx={{ justifyContent: "space-between" }}>
-      <ChangeMode id={id} />
+      <ChangeMode id={id} status={status} />
       <IconButton size="small">
         <DeleteIcon
           fontSize="large"

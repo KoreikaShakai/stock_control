@@ -19,7 +19,9 @@ export function StockList({ isUpload, setIsUpload }) {
       }
       const reqData = await fetch(`/photos?user_id=${userJson.uid}`); //このid使いたくない
       const dataJson = await reqData.json();
+      console.log(photos);
       setPhotos(dataJson.data);
+      console.log(photos);
     })();
   }, [reData]);
 
