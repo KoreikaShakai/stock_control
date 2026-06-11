@@ -5,6 +5,8 @@ import { atomFilterVali } from "./atoms";
 import { atomReData } from "./atoms";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
+import { ChangeFilter } from "../ChangeFilter";
+import "../login/LoginApp.css";
 
 export function StockList() {
   const nav = useNavigate();
@@ -27,23 +29,26 @@ export function StockList() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          margin: "10px",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        {photos
-          .filter(({ status }) => {
-            return filterVali === 0 ? true : filterVali === status;
-          })
-          .map((ele, ind) => {
-            console.log(ele);
-            return <StockListCard key={ind} ele={ele} ind={ind} />;
-          })}
-      </Box>
+      <div id="list">
+        {/* <ChangeFilter></ChangeFilter> */}
+        <Box
+          sx={{
+            display: "flex",
+            margin: "10px",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {photos
+            .filter(({ status }) => {
+              return filterVali === 0 ? true : filterVali === status;
+            })
+            .map((ele, ind) => {
+              console.log(ele);
+              return <StockListCard key={ind} ele={ele} ind={ind} />;
+            })}
+        </Box>
+      </div>
     </>
   );
 }

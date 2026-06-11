@@ -14,7 +14,7 @@ export function Header() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ textAlign: "center" }}>
+    <Box sx={{ textAlign: "center", position: "fixed", width: "1125px" }}>
       <AppBar position="static" sx={{ backgroundColor: "#6091d3" }}>
         <CameraModal />
         <Toolbar>
@@ -41,7 +41,7 @@ export function Header() {
           >
             Stock Control
           </Typography>
-          <ChangeFilter />
+          {/* <ChangeFilter /> */}
           <IconButton
             size="medium"
             edge="start"
