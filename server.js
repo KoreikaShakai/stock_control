@@ -24,27 +24,18 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 
 app.post("/photos", upload.any(), async (req, res) => {
-  console.log(1234);
   const userId = req.body.user_id;
+  const { name } = req.body;
   const fileName = req.files[0].originalname;
-  const create_data = {
-    user_id: userId,
-    photo_name: fileName,
-  };
   try {
-    const result = await knex(STOCK_DATA).insert(create_data, ["*"]);
-    // const result = await stockRepository.create(userId, fileName);
-    console.log(req.files[0]);
+    const result = await stockRepository.create(userId, fileName, name);
     const data = await uploadPhoto(
       req.files[0].buffer,
       req.files[0].originalname,
     );
-    console.log("data", data);
     res.status(200).json({ successe: true, data: data, result: result });
-    return;
   } catch (error) {
-    console.error(error);
-    return;
+    res.status(404).json({ a: false });
   }
 });
 
@@ -53,24 +44,22 @@ app.get("/photos", async (req, res) => {
   const userId = req.query["user_id"];
   try {
     const data = await stockRepository.findListByUserId(userId);
-    console.log("data", data);
     const result = await Promise.all(
       data.map(async (photo) => {
         const url = await s3GetSignedUrl(photo.photo_name);
-        console.log(userId);
         const res_object = {
           url: url,
           create_date: photo.create_date,
           id: photo.id,
           is_shortage: photo.is_shortage,
           status: photo.status,
+          name: photo.name,
         };
         return res_object;
       }),
     );
     res.status(200).json({ successe: true, data: result });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ successe: false, data: "写真取得失敗" });
   }
 });

@@ -1,12 +1,11 @@
 import { useCallback, useRef, useState } from "react";
-import { useNavigate } from "react-router";
 import Webcam from "react-webcam";
-import { Button, Typography, Box, Modal, IconButton } from "@mui/material";
+import { Box, Modal, IconButton, TextField } from "@mui/material";
 import dayjs from "dayjs";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { atomReData } from "./stock/atoms";
 import { atomOpen } from "./header/atoms";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom, useAtom } from "jotai";
 
 const style = {
   position: "absolute",
@@ -22,21 +21,19 @@ const style = {
 };
 
 export function CameraModal() {
-  const [reData, setRedata] = useAtom(atomReData);
+  const setRedata = useSetAtom(atomReData);
   const [open, setOpen] = useAtom(atomOpen);
   const webCamRef = useRef(null);
+  const [name, setName] = useState("");
 
   const videoConstraints = {
     facingMode: "environment",
   };
 
-  const onClickScreenShot = useCallback(async () => {
+  const onClickScreenShot = async () => {
     const image = webCamRef.current?.getScreenshot();
-    console.log("image", image);
     const blob = atob(image.replace(/^.*,/, ""));
-    console.log("blob", blob);
     let buffer = new Uint8Array(blob.length);
-    console.log(buffer);
     for (let i = 0; i < blob.length; i++) {
       buffer[i] = blob.charCodeAt(i);
     }
@@ -57,19 +54,18 @@ export function CameraModal() {
     );
 
     let formData = new FormData();
-    console.log(file);
     formData.append("file", file);
     formData.append("fileName", file.name);
     formData.append("user_id", user_id);
-    console.log(formData);
+    formData.append("name", name);
     await fetch(`/photos`, {
       method: "POST",
       body: formData,
     });
-    // setRedata(()=>!reData);
-    setRedata(!reData);
+    setRedata((i) => i + 1);
     setOpen(false);
-  }, [webCamRef]);
+    setName("");
+  };
 
   return (
     <div>
@@ -77,6 +73,7 @@ export function CameraModal() {
         open={open}
         onClose={() => {
           setOpen(false);
+          setName("");
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -101,6 +98,7 @@ export function CameraModal() {
               color="primary"
               aria-label="capture"
               sx={{ backgroundColor: "lightgrey" }}
+              disabled={name === ""}
             >
               <AddAPhotoIcon
                 fontSize="large"
@@ -108,6 +106,13 @@ export function CameraModal() {
                 onClick={onClickScreenShot}
               />
             </IconButton>
+            <TextField
+              placeholder="名前を入力してください"
+              onChange={(e) => {
+                setName(e.target.value);
+                console.log(name);
+              }}
+            />
           </div>
         </Box>
       </Modal>

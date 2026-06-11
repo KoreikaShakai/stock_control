@@ -1,19 +1,18 @@
 import { ButtonGroup, Button } from "@mui/material";
 import { atomReData } from "./atoms";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 export function ChangeMode({ id, status }) {
-  const [reData, setReData] = useAtom(atomReData);
+  const setReData = useSetAtom(atomReData);
   async function statusChange(status) {
     await fetch("/stock", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: id, status: status }),
     });
-    setReData(!reData);
+    setReData((i) => i + 1);
   }
 
-  console.log({ id, status });
   return (
     <ButtonGroup variant="contained">
       <Button
