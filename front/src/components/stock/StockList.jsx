@@ -34,7 +34,7 @@ export function StockList() {
         }}
       >
         {photos.map((ele, ind) => {
-          console.log(ele);
+          // console.log(ele);
           return <StockListCard key={ind} ele={ele} ind={ind} />;
         })}
       </Box>

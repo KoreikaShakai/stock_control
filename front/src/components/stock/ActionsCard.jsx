@@ -3,19 +3,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { ChangeMode } from "./ChangeMode";
-import { atomReData, atomRakutenView } from "./atoms";
+import {
+  atomReData,
+  atomRakutenView,
+  atomDeleteId,
+  atomDialogOpen,
+} from "./atoms";
 import { useAtom } from "jotai";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 export function ActionsCard({ id, ind, status }) {
   const [rakutenView, setRakutenView] = useAtom(atomRakutenView);
   const [reData, setReData] = useAtom(atomReData);
+  const [deleteId, setDeleteId] = useAtom(atomDeleteId);
+  const [dialogOpen, setDialogOpen] = useAtom(atomDialogOpen);
+
+  const handleDialog = () => {
+    setDeleteId(id);
+    setDialogOpen(true);
+  };
   const handleRemove = async () => {
-    await fetch("/delete", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: id }),
-    });
+    console.log("id: ", id);
+    // await fetch("/delete", {
+    //   method: "DELETE",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ id: id }),
+    // });
     setReData(!reData);
+    setDialogOpen(false);
   };
 
   return (
@@ -25,12 +40,19 @@ export function ActionsCard({ id, ind, status }) {
         <DeleteIcon
           fontSize="large"
           sx={{ color: "red" }}
-          onClick={handleRemove}
+          onClick={handleDialog}
         />
       </IconButton>
+      {dialogOpen && (
+        <ConfirmDialog
+          open={dialogOpen}
+          id={atomDeleteId}
+          onExecute={handleRemove}
+        />
+      )}
       <IconButton>
         <AddShoppingCartIcon
-          sx={{ color: "black" }}
+          sx={{ color: status === 2 ? "red" : "black" }}
           onClick={() => {
             if (rakutenView === -1) {
               setRakutenView(ind);
