@@ -87,8 +87,8 @@ app.delete("/delete", async (req, res) => {
 });
 
 app.get("/rakuten", async (req, res) => {
-  console.log("un");
-  const data = await rakuten();
+  const keyWord = req.query.keyword;
+  const data = await rakuten(keyWord);
   res.json(data);
 });
 
