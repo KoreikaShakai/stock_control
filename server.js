@@ -34,9 +34,8 @@ app.post("/photos", upload.any(), async (req, res) => {
       req.files[0].originalname,
     );
     res.status(200).json({ successe: true, data: data, result: result });
-    return;
   } catch (error) {
-    return;
+    res.status(404).json({ a: false });
   }
 });
 
@@ -54,6 +53,7 @@ app.get("/photos", async (req, res) => {
           id: photo.id,
           is_shortage: photo.is_shortage,
           status: photo.status,
+          name: photo.name,
         };
         return res_object;
       }),
