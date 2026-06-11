@@ -5,7 +5,7 @@ import { TextField } from "@mui/material";
 
 export function InputEmail() {
   const setEmail = useSetAtom(atomEmail);
-  const ref = useRef(null);
+  // const ref = useRef(null);
 
   return (
     <>
@@ -21,17 +21,18 @@ export function InputEmail() {
         }}
       /> */}
       <TextField
+        sx={{ width: "275px" }}
         id="outlined-basic"
         label="E-mail"
         variant="outlined"
-        ref={ref}
+        // ref={ref}
         aria-invalid="false"
         className="cert-con"
         type="text"
         data-testid="…"
         placeholder="Email"
-        onChange={() => {
-          setEmail(ref.current.value);
+        onChange={(e) => {
+          setEmail(e.target.value);
         }}
       ></TextField>
     </>

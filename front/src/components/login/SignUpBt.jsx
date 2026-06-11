@@ -24,7 +24,12 @@ export function SignUpBt() {
     }
   };
   return (
-    <Button variant="contained" endIcon={<SendIcon />} onClick={signUp}>
+    <Button
+      id="right_button"
+      variant="contained"
+      endIcon={<SendIcon />}
+      onClick={signUp}
+    >
       認証
     </Button>
   );

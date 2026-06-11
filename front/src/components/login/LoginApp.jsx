@@ -1,3 +1,4 @@
+import "./LoginApp.css";
 import { atomNewForm } from "./atoms";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
@@ -24,24 +25,27 @@ export function LoginApp() {
   }, []);
 
   return (
-    <div className="app-container">
-      <p id="user">【 利用者ID「認証」】</p>
-      <p id="user_id">利用者IDを入力してください（メールアドレス）</p>
-      <InputEmail />
-      <p>パスワードを入力してください（英数字８桁以上）</p>
-      <InputPass />
+    <>
+      <div className="app-container">
+        <p id="title">Stock Control</p>
+        <p id="user">サインイン</p>
+        <p id="user_id">利用者IDを入力してください（メールアドレス）</p>
+        <InputEmail />
+        <p id="pass">パスワードを入力してください（英数字８桁以上）</p>
+        <InputPass id="pass" />
 
-      {newForm ? (
-        <div>
-          <BackBt />
-          <SignUpBt />
-        </div>
-      ) : (
-        <div>
-          <NewAuthBt />
-          <SignInBt />
-        </div>
-      )}
-    </div>
+        {newForm ? (
+          <div>
+            <BackBt />
+            <SignUpBt />
+          </div>
+        ) : (
+          <div>
+            <NewAuthBt />
+            <SignInBt />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

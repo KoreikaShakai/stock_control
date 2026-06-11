@@ -1,3 +1,4 @@
+import "./LoginApp.css";
 import { atomNewForm } from "./atoms";
 import { useSetAtom } from "jotai";
 import { Button } from "@mui/material";
@@ -8,6 +9,7 @@ export function NewAuthBt() {
 
   return (
     <Button
+      id="left_button"
       onClick={() => {
         setNewForm(true);
       }}

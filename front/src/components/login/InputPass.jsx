@@ -1,3 +1,5 @@
+import "./LoginApp.css";
+import * as React from "react";
 import { useSetAtom } from "jotai";
 import { atomPass } from "./atoms";
 import { useRef } from "react";
@@ -12,23 +14,47 @@ import IconButton from "@mui/material/IconButton";
 export function InputPass() {
   const setPass = useSetAtom(atomPass);
   const ref = useRef(null);
-  // const filledPasswordId = React.useId();
+  const filledPasswordId = React.useId();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <>
-      <input
+      {/* <input
         ref={ref}
         type="password"
         placeholder=""
         onChange={() => {
+          console.log(ref.current.value);
           setPass(ref.current.value);
         }}
-      />
-      {/* <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-        <InputLabel htmlFor={`${filledPasswordId}-input`}>Password</InputLabel>
+      /> */}
+      <FormControl sx={{ m: 1, width: "275px" }} variant="filled">
+        <InputLabel
+          htmlFor={`${filledPasswordId}-input`}
+          onChange={(e) => {
+            console.log(e.target.value);
+            setPass(e.target.value);
+          }}
+        >
+          Password
+        </InputLabel>
         <FilledInput
           id={`${filledPasswordId}-input`}
           type={showPassword ? "text" : "password"}
+          onChange={(e) => {
+            console.log(e.target.value);
+            setPass(e.target.value);
+          }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -45,7 +71,7 @@ export function InputPass() {
             </InputAdornment>
           }
         />
-      </FormControl> */}
+      </FormControl>
     </>
   );
 }

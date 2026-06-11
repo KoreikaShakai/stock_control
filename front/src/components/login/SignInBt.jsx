@@ -3,6 +3,7 @@ import { atomEmail, atomPass } from "./atoms";
 import { useNavigate } from "react-router";
 import SendIcon from "@mui/icons-material/Send";
 import { Button } from "@mui/material";
+import "./LoginApp.css";
 
 export function SignInBt() {
   const email = useAtomValue(atomEmail);
@@ -26,7 +27,12 @@ export function SignInBt() {
     }
   };
   return (
-    <Button variant="contained" endIcon={<SendIcon />} onClick={signIn}>
+    <Button
+      id="right_button"
+      variant="contained"
+      endIcon={<SendIcon />}
+      onClick={signIn}
+    >
       認証
     </Button>
   );
