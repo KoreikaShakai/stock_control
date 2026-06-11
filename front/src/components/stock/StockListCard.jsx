@@ -30,7 +30,7 @@ export function StockListCard({ ele, ind }) {
         if (rakutenView === ind) {
           return (
             <Card sx={{ width: 345, height: 480, flex: "auto" }}>
-              <RakutenRate />
+              <RakutenRate name={ele.name} />
             </Card>
           );
         }

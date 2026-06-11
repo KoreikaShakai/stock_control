@@ -3,13 +3,14 @@ import Avatar from "@mui/material/Avatar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
 
-export function RakutenRate() {
+export function RakutenRate(name) {
   // データ取得
+  const key = name.name;
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
     const datanow = [];
     const itemData = async () => {
-      const response = await fetch("/rakuten");
+      const response = await fetch(`/rakuten?keyword=${key}`);
       const data = await response.json();
       let i;
       for (i = 0; i <= 9; i++) {
