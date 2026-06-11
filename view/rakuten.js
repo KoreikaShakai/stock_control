@@ -1,12 +1,11 @@
 const APP_ID = "6a723290-d16d-4d45-b4d0-ef9fff4fb1de";
 const acces_Key = "pk_kFbx3GoYL1HNJ2YdGgH3SeRdN0AWuM4NKFYMa19BwrY";
 
-async function rakuten() {
+async function rakuten(keyWord) {
   console.log("us");
   const URL =
     "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260401?applicationId=6a723290-d16d-4d45-b4d0-ef9fff4fb1de&accessKey=pk_kFbx3GoYL1HNJ2YdGgH3SeRdN0AWuM4NKFYMa19BwrY&keyword=寿司&hits=10";
 
-  let keyWord = "広島東洋カープ";
   let NGkeyword = "ふるさと納税";
   const url =
     "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260401" +
