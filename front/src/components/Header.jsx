@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { useAtom } from "jotai";
 import { atomOpen } from "./header/atoms";
+import { ChangeFilter } from "./ChangeFilter";
 
 export function Header() {
   const [open, setOpen] = useAtom(atomOpen);
@@ -32,6 +33,7 @@ export function Header() {
           <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
             日用品ストック
           </Typography>
+          <ChangeFilter />
           <IconButton
             size="medium"
             edge="start"
