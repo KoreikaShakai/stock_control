@@ -14,7 +14,7 @@ export function Header() {
 
   return (
     <Box sx={{ textAlign: "center" }}>
-      <AppBar position="static" sx={{ backgroundColor: "tomato" }}>
+      <AppBar position="static" sx={{ backgroundColor: "#6091d3" }}>
         <CameraModal />
         <Toolbar>
           <IconButton
@@ -29,8 +29,16 @@ export function Header() {
           >
             <LogoutIcon fontSize="large" sx={{ color: "red" }} />
           </IconButton>
-          <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
-            日用品ストック
+          <Typography
+            variant="h3"
+            component="div"
+            sx={{
+              flexGrow: 1,
+              fontFamily: '"Londrina Shadow", cursive',
+              fontSize: "60px",
+            }}
+          >
+            Stock Control
           </Typography>
           <IconButton
             size="medium"

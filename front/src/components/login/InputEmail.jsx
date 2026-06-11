@@ -8,6 +8,7 @@ export function InputEmail() {
   return (
     <>
       <TextField
+        sx={{ width: "275px" }}
         id="outlined-basic"
         label="E-mail"
         variant="outlined"
