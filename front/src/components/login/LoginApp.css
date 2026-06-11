@@ -41,3 +41,29 @@
   margin: 30px 50px;
   margin-bottom: 100px;
 }
+
+#filter {
+  width: 1100px;
+  margin: -20px 0px 0px auto;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  color: #6091d3;
+}
+#list {
+  margin-top: 120px;
+}
+
+#filter_header {
+  position: fixed;
+  margin: 70px 0px 0px 0px;
+  top: 0;
+  z-index: 1000;
+  width: 1100px;
+  height: 45px;
+  color: white;
+  background-color: white;
+  padding-inline: 12.4px;
+  align-content: center;
+  box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.5);
+}

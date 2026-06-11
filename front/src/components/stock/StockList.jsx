@@ -5,6 +5,8 @@ import { atomFilterVali } from "./atoms";
 import { atomReData } from "./atoms";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
+import { ChangeFilter } from "../ChangeFilter";
+import "../login/LoginApp.css";
 
 export function StockList() {
   const nav = useNavigate();
