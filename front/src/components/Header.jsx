@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { useAtom } from "jotai";
 import { atomOpen } from "./header/atoms";
+import { ChangeFilter } from "./ChangeFilter";
 
 export function Header() {
   const [open, setOpen] = useAtom(atomOpen);
@@ -40,6 +41,7 @@ export function Header() {
           >
             Stock Control
           </Typography>
+          <ChangeFilter />
           <IconButton
             size="medium"
             edge="start"
