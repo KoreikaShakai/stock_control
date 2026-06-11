@@ -29,26 +29,23 @@ export function StockList() {
 
   return (
     <>
-      <div id="list">
-        {/* <ChangeFilter></ChangeFilter> */}
-        <Box
-          sx={{
-            display: "flex",
-            margin: "10px",
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          {photos
-            .filter(({ status }) => {
-              return filterVali === 0 ? true : filterVali === status;
-            })
-            .map((ele, ind) => {
-              console.log(ele);
-              return <StockListCard key={ind} ele={ele} ind={ind} />;
-            })}
-        </Box>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          margin: "10px",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {photos
+          .filter(({ status }) => {
+            return filterVali === 0 ? true : filterVali === status;
+          })
+          .map((ele, ind) => {
+            // console.log(ele);
+            return <StockListCard key={ind} ele={ele} ind={ind} />;
+          })}
+      </Box>
     </>
   );
 }
