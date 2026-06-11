@@ -40,7 +40,7 @@ export function StockList() {
             return filterVali === 0 ? true : filterVali === status;
           })
           .map((ele, ind) => {
-            console.log(ele);
+            // console.log(ele);
             return <StockListCard key={ind} ele={ele} ind={ind} />;
           })}
       </Box>

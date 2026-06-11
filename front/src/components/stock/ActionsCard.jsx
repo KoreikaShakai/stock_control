@@ -23,12 +23,12 @@ export function ActionsCard({ id, ind, status }) {
     setDialogOpen(true);
   };
   const handleRemove = async () => {
-    console.log("id: ", id);
-    // await fetch("/delete", {
-    //   method: "DELETE",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ id: id }),
-    // });
+    console.log("id: ", deleteId);
+    await fetch("/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: deleteId }),
+    });
     setReData(!reData);
     setDialogOpen(false);
   };

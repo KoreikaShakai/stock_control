@@ -3,7 +3,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
+  FormControl,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { useState } from "react";
@@ -17,16 +19,21 @@ export function ConfirmDialog({ open, id, onExecute }) {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle>削除の確認</DialogTitle>
-      <DialogActions>
-        <Button onClick={onExecute} color="primary">
-          実行
-        </Button>
-        <Button onClick={handleCancel} color="inherit">
-          キャンセル
-        </Button>
-      </DialogActions>
+    <Dialog open={open} fullWidth={true} maxWidth="sm">
+      <DialogTitle sx={{ textAlign: "center" }}>削除の確認</DialogTitle>
+      <FormControl>
+        <DialogContentText sx={{ textAlign: "center" }}>
+          この商品を管理から削除して良いですか？
+        </DialogContentText>{" "}
+        <DialogActions>
+          <Button onClick={onExecute} color="primary">
+            実行
+          </Button>
+          <Button onClick={handleCancel} color="inherit">
+            キャンセル
+          </Button>
+        </DialogActions>
+      </FormControl>
     </Dialog>
   );
 }
