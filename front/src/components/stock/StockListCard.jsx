@@ -22,7 +22,7 @@ export function StockListCard({ ele, ind }) {
       <Card sx={{ width: 345, flex: "auto" }}>
         <CardMedia sx={{ height: 320 }} image={ele.url} />
 
-        <DateCard create_date={ele.create_date} />
+        <DateCard create_date={ele.create_date} name={ele.name} />
 
         <ActionsCard id={ele.id} status={ele.status} ind={ind} />
       </Card>
